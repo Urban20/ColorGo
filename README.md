@@ -1,61 +1,130 @@
-## para crear un color:
+# colorgo - Colores en Consola para Go 🎨
 
-`colorgo.Formateo(color) -> string`
+`colorgo` es un pequeño módulo para Go que te permite añadir fácilmente colores y efectos de texto a tus aplicaciones de consola. Con una interfaz simple y una variedad de opciones, puedes mejorar la legibilidad y estética de tus outputs.
 
-ejemplo:
+## Instalación
 
-`var blanco = Formateo("BLANCO")`
-
-`fmt.Println(blanco + "hola mundo")`
-
-## colores:
+```bash
+go get github.com/Urban20/ColorGo
 ```
-ROJO
 
-VERDE
+## Uso Básico
 
-AMARILLO
+Importa el módulo y usa la función `Formateo`:
 
-AZUL
+```go
+package main
 
-CELESTE
+import (
+	"fmt"
+	"github.com/Urban20/ColorGo"
+)
 
-BLANCO
+func main() {
+	rojo := colorgo.Formateo("ROJO")
+	reset := colorgo.Formateo("RESET")
+	
+	fmt.Printf("%s¡Error!%s Algo salió mal\n", rojo, reset)
+}
+```
 
-NEGRO
+## Guía de Colores y Efectos
 
-VIOLETA
+### Colores Básicos
+```go
+fmt.Println(
+	colorgo.Formateo("ROJO") + "Rojo" + colorgo.Formateo("RESET"),
+	colorgo.Formateo("VERDE") + "Verde" + colorgo.Formateo("RESET"),
+	colorgo.Formateo("AMARILLO") + "Amarillo" + colorgo.Formateo("RESET"),
+)
+```
 
-RESET
+| Nombre    | Muestra       |
+|-----------|---------------|
+| ROJO     | <span style="color:red">Texto rojo</span> |
+| VERDE    | <span style="color:green">Texto verde</span> |
+| AMARILLO | <span style="color:gold">Texto amarillo</span> |
+| AZUL     | <span style="color:blue">Texto azul</span> |
+| CELESTE  | <span style="color:deepskyblue">Texto celeste</span> |
+| VIOLETA  | <span style="color:purple">Texto violeta</span> |
+| BLANCO   | Texto blanco |
+| NEGRO    | Texto negro |
+| RESET    | Restaura colores |
 
-SUB_ROJO
+### Texto Subrayado
+```go
+fmt.Println(colorgo.Formateo("SUB_AZUL") + "Texto subrayado" + colorgo.Formateo("RESET"))
+```
 
-SUB_VERDE
+| Nombre         | Efecto               |
+|----------------|----------------------|
+| SUB_ROJO      | Texto rojo subrayado |
+| SUB_VERDE     | Texto verde subrayado|
+| SUB_AMARILLO  | Texto amarillo subrayado|
+| SUB_AZUL      | Texto azul subrayado |
+| SUB_CELESTE   | Texto celeste subrayado|
+| SUB_VIOLETA   | Texto violeta subrayado|
 
-SUB_AMARILLO
+### Fondos Coloreados
+```go
+fmt.Println(colorgo.Formateo("F_AMARILLO") + "Fondo amarillo" + colorgo.Formateo("RESET"))
+```
 
-SUB_AZUL
+| Nombre      | Efecto          |
+|-------------|-----------------|
+| F_ROJO      | Fondo rojo      |
+| F_VERDE     | Fondo verde     |
+| F_AMARILLO  | Fondo amarillo  |
+| F_AZUL      | Fondo azul      |
+| F_CELESTE   | Fondo celeste   |
+| F_VIOLETA   | Fondo violeta   |
+| F_BLANCO    | Fondo blanco    |
+| F_NEGRO     | Fondo negro     |
 
-SUB_CELESTE
+## Ejemplo Completo
 
-SUB_BLANCO
+```go
+package main
 
-SUB_NEGRO
+import (
+	"fmt"
+	"github.com/Urban20/ColorGo"
+)
 
-SUB_VIOLETA
+func main() {
+	// Mensajes de estado
+	exito := colorgo.Formateo("VERDE") + "✓ Éxito" + colorgo.Formateo("RESET")
+	alerta := colorgo.Formateo("AMARILLO") + "⚠ Alerta" + colorgo.Formateo("RESET")
+	error := colorgo.Formateo("ROJO") + "✗ Error" + colorgo.Formateo("RESET")
+	
+	// Texto con formato combinado
+	destacado := colorgo.Formateo("F_AZUL") + colorgo.Formateo("SUB_BLANCO") + "¡Destacado!" 
+	
+	fmt.Printf("%s: Operación completada\n", exito)
+	fmt.Printf("%s: Campos incompletos\n", alerta)
+	fmt.Printf("%s: Archivo no encontrado\n\n", error)
+	fmt.Println(destacado + colorgo.Formateo("RESET"))
+}
+```
 
-F_ROJO
+## Notas Importantes
 
-F_VERDE
-
-F_AMARILLO
-
-F_AZUL
-
-F_CELESTE
-
-F_BLANCO
-
-F_NEGRO
-
-F_VIOLETA
+1. **Siempre usa RESET** al final de los textos coloreados
+2. **Combina efectos** concatenando múltiples códigos:
+   ```go
+   // Texto rojo subrayado con fondo amarillo
+   combo := colorgo.Formateo("SUB_ROJO") + colorgo.Formateo("F_AMARILLO")
+   ```
+3. **Compatibilidad**: Funciona en terminales que soportan códigos ANSI (Linux, macOS, Windows 10+)
+4. Para **Windows antiguo**, necesitarás habilitar el soporte ANSI:
+   ```go
+   // Añade esto al inicio de tu aplicación para Windows
+   import "golang.org/x/sys/windows"
+   
+   func init() {
+       stdout := windows.Handle(os.Stdout.Fd())
+       var originalMode uint32
+       windows.GetConsoleMode(stdout, &originalMode)
+       windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+   }
+   ```
